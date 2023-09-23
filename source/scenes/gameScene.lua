@@ -3,7 +3,7 @@ import "CoreLibs/ui"
 import "sceneManager"
 import "scenes/gameOverScene"
 import "sprites/card"
-import "sprites/arrow"
+import "sprites/image"
 import "sprites/text"
 
 local pd <const> = playdate
@@ -21,7 +21,7 @@ function GameScene:enter(previous, howManyCards, radius)
     self.radius = radius or 80
 
     ---Game data
-    self.centerX = 300 + (self.radius - 80)
+    self.centerX = 200 + (self.radius - 80)
     self.centerY = 120
     self.step = 360/(self.howManyCards * 2)
     self.isRunning = true
@@ -44,19 +44,18 @@ function GameScene:enter(previous, howManyCards, radius)
         table.insert(self.cards, Card(self.centerX, self.centerY, self.radius, i, cardNos[#self.cards+1]))
     end
 
-    ---Prints arrow
-    self.arrow = Arrow(self.centerX - self.radius - 32, self.centerY)
+    ---Masking image
+    Image(200, 120, gfx.image.new('images/gameSceneMask'), true)
 
     ---Game info screen
-    local KeyX = 5
-    local ValueX = 70
-    Text("couples", 5, 5, false, 'fonts/Carded Big Run')
-    self.elapsedTimeKey = Text('Time:', KeyX, 65)
-    self.elapsedTimeValue = Text('0:00', ValueX, 65)
-    self.wrongAttemptsKey = Text('Errors:', KeyX, 80)
-    self.wrongAttemptsValue = Text('0', ValueX, 80)
-    self.discoveredCardsKey = Text('Found:', KeyX, 95)
-    self.discoveredCardsValue = Text('0/' .. self.howManyCards, ValueX, 95)
+    local InfoX = 351
+    Text("c\no\nu\np\nl\ne\ns", 50, 120, 'center', 'Carded Big Run')
+    self.elapsedTimeKey = Text('Time', InfoX, 58, 'center')
+    self.elapsedTimeValue = Text('0:00', InfoX, 78, 'center', 'Kerned Bigger Run')
+    self.wrongAttemptsKey = Text('Errors', InfoX, 108, 'center')
+    self.wrongAttemptsValue = Text('0', InfoX, 128, 'center', 'Kerned Bigger Run')
+    self.discoveredCardsKey = Text('Found', InfoX, 158, 'center')
+    self.discoveredCardsValue = Text('0/' .. self.howManyCards, InfoX, 178, 'center', 'Kerned Bigger Run')
 
     ---Crank indicator
     pd.ui.crankIndicator:start()

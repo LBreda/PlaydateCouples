@@ -13,7 +13,7 @@ function TitleScene:enter()
     local menuRow = 130
     local rowHeight = gfx.font.new('fonts/Big Run'):getHeight() * 1.5
 
-    Text("couples", 200, 70, true, 'fonts/Carded Big Run')
+    Text("couples", 200, 70, true, 'Carded Big Run')
 
     self.gameMenu = {
         LevelSelectionMenuItem("Easy", menuCol, menuRow, true),

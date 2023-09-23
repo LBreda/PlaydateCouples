@@ -9,12 +9,13 @@ class('Text').extends(gfx.sprite)
 ---@param text string The text to show
 ---@param x integer X
 ---@param y integer Y
----@param centered ?boolean If true, X and Y are used for the center, if false they are used for the top-left. Defaults to false
+---@param align ?string alignment, defaults to centered
 ---@param fontFile string Font file
-function Text:init(text, x, y, centered, fontFile)
-    self.centered = centered or false
+function Text:init(text, x, y, align, fontFile)
+    self.align = align
     self.selectedX, self.selectedY = x, y
-    fontFile = fontFile or 'fonts/Big Run'
+    fontFile = 'fonts/'.. (fontFile or 'Kerned Big Run')
+    print(fontFile)
     self.font = gfx.font.new(fontFile)
     printTable(self.font)
 
@@ -43,9 +44,11 @@ function Text:changeText(text)
 	self:setImage(image)
 
     -- Realigns the image
-    if self.centered then
-        self:moveTo(self.selectedX, self.selectedY)
+    if self.align == 'left' then
+        self:moveTo(self.selectedX + width/2, self.selectedY - height / 2)
+    elseif self.align == 'right' then
+        self:moveTo(self.selectedX - width/2, self.selectedY - height / 2)
     else
-        self:moveTo(self.selectedX + width/2, self.selectedY + height/2)
+        self:moveTo(self.selectedX, self.selectedY)
     end
 end

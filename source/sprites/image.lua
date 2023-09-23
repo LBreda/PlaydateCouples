@@ -3,14 +3,15 @@ import "CoreLibs/sprites"
 local pd <const> = playdate
 local gfx <const> = pd.graphics
 
-class('Arrow').extends(gfx.sprite)
+class('Image').extends(gfx.sprite)
 
----Sprite containing text
+---Sprite to print any image
 ---@param x integer X
 ---@param y integer Y
-function Arrow:init(x, y)
+---@param image table
+---@param centered ?boolean Whether the image is centered
+function Image:init(x, y, image)
     -- Writes the image
-    local image = gfx.image.new('images/arrow')
 	self:setImage(image)
 
     -- Prints the image

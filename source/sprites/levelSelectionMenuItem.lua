@@ -19,7 +19,7 @@ function LevelSelectionMenuItem:init(text, x, y, isSelected)
 end
 
 function LevelSelectionMenuItem:resetImage()
-    local currentFont = gfx.font.new('fonts/Big Run')
+    local currentFont = gfx.font.new('fonts/Kerned Big Run')
     gfx.setFont(currentFont)
     local currentFontHeight = currentFont:getHeight()
     local bulletRadius = currentFontHeight * .2

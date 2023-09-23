@@ -11,11 +11,11 @@ class("GameOverScene").extends(Room)
 function GameOverScene:enter(previous)
 	self.previous = previous
 
-	Text('Yay!', 200, 50, true)
-	Text('You finished the ' .. previous.howManyCards .. '-card game in ' .. prettyPrintTime(previous.timerValue) .. ' minutes', 200, 75, true)
-	Text('with ' .. previous.wrongAttempts .. ' errors!', 200, 100, true)
+	Text('Yay!', 200, 50)
+	Text('You finished the ' .. previous.howManyCards .. '-card game in ' .. prettyPrintTime(previous.timerValue) .. ' minutes', 200, 75)
+	Text('with ' .. previous.wrongAttempts .. ' errors!', 200, 100)
 
-	Text('Press A to retry, B to change difficulty', 200, 200, true)
+	Text('Press A to retry, B to change difficulty', 200, 200)
 end
 
 function GameOverScene:update(dt)
