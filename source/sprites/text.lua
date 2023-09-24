@@ -15,9 +15,7 @@ function Text:init(text, x, y, align, fontFile)
     self.align = align
     self.selectedX, self.selectedY = x, y
     fontFile = 'fonts/'.. (fontFile or 'Kerned Big Run')
-    print(fontFile)
     self.font = gfx.font.new(fontFile)
-    printTable(self.font)
 
     self:changeText(text)
 
@@ -45,9 +43,9 @@ function Text:changeText(text)
 
     -- Realigns the image
     if self.align == 'left' then
-        self:moveTo(self.selectedX + width/2, self.selectedY - height / 2)
+        self:moveTo(self.selectedX + width/2, self.selectedY + height / 2)
     elseif self.align == 'right' then
-        self:moveTo(self.selectedX - width/2, self.selectedY - height / 2)
+        self:moveTo(self.selectedX - width/2, self.selectedY + height / 2)
     else
         self:moveTo(self.selectedX, self.selectedY)
     end
