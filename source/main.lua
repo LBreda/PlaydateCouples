@@ -5,8 +5,12 @@ import "scenes/TitleScene"
 local pd <const> = playdate
 local sound <const> = pd.sound
 
+---Seeds the math.random function
 math.randomseed(playdate.getSecondsSinceEpoch())
 
+---Shuffles a given table
+---@param t table The table to shuffle
+---@return table Shuffled table
 function shuffleTable(t)
     local tbl = {}
     for i = 1, #t do
@@ -19,6 +23,9 @@ function shuffleTable(t)
     return tbl
 end
 
+---Prints a given time (in seconds) in the form "mm:ss"
+---@param seconds integer Time in seconds
+---@return string Pretty printed time
 function prettyPrintTime(seconds)
     local mins = tostring(math.floor(seconds / 60))
     local secs = tostring(math.floor(seconds % 60))
@@ -49,6 +56,12 @@ function playBgMusicWithIntro(intro, theme, volume)
     return bgMusic
 end
 
+---Creates the datastore if it doesn't exist
+if not playdate.datastore.read() then
+    playdate.datastore.write({progressionLevel = 1})
+end
+
+---Scene manager initialization and configuration
 sceneManager = Manager()
 sceneManager:hook({
     include = {
@@ -62,6 +75,8 @@ sceneManager:hook({
     },
 })
 sceneManager:enter(TitleScene())
+
+---Update cycle
 function pd.update()
     sceneManager:emit('update')
 end
