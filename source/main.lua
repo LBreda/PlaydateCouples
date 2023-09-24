@@ -1,5 +1,4 @@
 import "sceneManager"
-import "signalManager"
 
 import "scenes/TitleScene"
 
@@ -49,8 +48,6 @@ function playBgMusicWithIntro(intro, theme, volume)
     end
     return bgMusic
 end
-
-signalManager = Signal()
 
 sceneManager = Manager()
 sceneManager:hook({
