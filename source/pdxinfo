@@ -3,5 +3,5 @@ author=Lorenzo Breda
 description=A memory game
 bundleID=com.lbreda.playdate.couples
 version=0.0.1
-buildNumber=11
+buildNumber=12
 imagePath=images/launcher

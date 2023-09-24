@@ -1,13 +1,16 @@
 import "CoreLibs/timer"
 import "CoreLibs/ui"
+import "CoreLibs/graphics"
 import "sceneManager"
 import "scenes/gameOverScene"
+import "scenes/titleScene"
 import "sprites/card"
 import "sprites/image"
 import "sprites/text"
 
 local pd <const> = playdate
 local gfx <const> = pd.graphics
+local sound <const> = pd.sound
 
 class("GameScene").extends(Room)
 
@@ -15,10 +18,27 @@ class("GameScene").extends(Room)
 ---@param previous table Previous scene
 ---@param howManyCards integer how many cards to show (defaults to 6)
 ---@param radius integer (defaults to 80)
-function GameScene:enter(previous, howManyCards, radius)
+function GameScene:enter(previous, howManyCards, radius, music)
+    ---Available music tracks
+    local musicTracks = {
+        {
+            intro = nil,
+            loop = 'xDeviruchi - The Final of The Fantasy',
+        },
+        {
+            intro = 'xDeviruchi - Take some rest and eat some food! (Intro)',
+            loop = 'xDeviruchi - Take some rest and eat some food! (Loop)',
+        },
+        {
+            intro = 'xDeviruchi - And The Journey Begins (Intro)',
+            loop = 'xDeviruchi - And The Journey Begins (Loop)',
+        },
+    }
+
     ---Scene configurations
     self.howManyCards = howManyCards or 6
     self.radius = radius or 80
+    self.music = music or (1 + math.floor((2 - #musicTracks) * math.random()))
 
     ---Game data
     self.centerX = 200 + (self.radius - 80)
@@ -29,6 +49,12 @@ function GameScene:enter(previous, howManyCards, radius)
     self.wrongAttempts = 0
     self.discoveredCards = 0
     self.selectedCard = nil
+    self.sfxPickup = playdate.sound.sampleplayer.new('sounds/sfx/pickup3')
+    self.sfxWrong = playdate.sound.sampleplayer.new('sounds/sfx/lose3')
+    self.sfxRight = playdate.sound.sampleplayer.new('sounds/sfx/win')
+
+    ---Plays music
+    self.bgMusic = playBgMusicWithIntro(musicTracks[self.music]['intro'], musicTracks[self.music]['loop'])
 
     ---Generates cards list
     local cardList = {}
@@ -49,7 +75,7 @@ function GameScene:enter(previous, howManyCards, radius)
 
     ---Game info screen
     local InfoX = 351
-    Text("c\no\nu\np\nl\ne\ns", 50, 120, 'center', 'Carded Big Run')
+    Text("c\no\nu\np\nl\ne\ns", 50, 120, 'center', 'Carded Bigger Run')
     self.elapsedTimeKey = Text('Time', InfoX, 58, 'center')
     self.elapsedTimeValue = Text('0:00', InfoX, 78, 'center', 'Kerned Bigger Run')
     self.wrongAttemptsKey = Text('Errors', InfoX, 108, 'center')
@@ -59,6 +85,23 @@ function GameScene:enter(previous, howManyCards, radius)
 
     ---Crank indicator
     pd.ui.crankIndicator:start()
+
+    ---Modify system menu
+    local menu = pd.getSystemMenu()
+    menu:removeAllMenuItems()
+    menu:addMenuItem('Restart game', function ()
+        self.bgMusic:stop()
+        sceneManager:enter(GameScene(), self.howManyCards, self.radius, self.music)
+    end)
+    menu:addMenuItem('Game home', function ()
+        self.bgMusic:stop()
+        sceneManager:enter(TitleScene())
+    end)
+
+    ---Game pause
+    function pd.gameWillPause()
+        pd.setMenuImage(self:menuImage())
+    end
 
     pd.resetElapsedTime()
 end
@@ -83,6 +126,7 @@ function GameScene:cranked(change)
     end
 end
 function GameScene:AButtonDown()
+    self.sfxPickup:play()
     self:selectCard()
 end
 function GameScene:BButtonDown()
@@ -115,10 +159,12 @@ function GameScene:selectCard()
                     ---and it contains the same figure
                     if self.selectedCard.cardNo == self.cards[i].cardNo then
                         ---Increments the discoveredCards
+                        self.sfxRight:play()
                         self:incrementDiscoveredCards()
                     ---and it does not contain the same figure
                     else
                         ---Flips the cards back again
+                        self.sfxWrong:play()
                         self.selectedCard:flip()
                         self.cards[i]:flip()
                         ---Increments the wrongAttempts
@@ -154,6 +200,29 @@ function GameScene:incrementDiscoveredCards()
     self.discoveredCardsValue:changeText(self.discoveredCards .. '/' .. self.howManyCards)
     if self.discoveredCards == self.howManyCards then
         self.isRunning = false
+        self.bgMusic:stop()
         sceneManager:enter(GameOverScene())
     end
+end
+
+---Generates the menu image
+function GameScene:menuImage()
+    local pauseImage = gfx.image.new(400, 240, gfx.kColorWhite)
+    gfx.lockFocus(pauseImage)
+        gfx.setFont(gfx.font.new('fonts/Carded Bigger Run'))
+        gfx.drawTextAligned("c\no\nu\np\nl\ne\ns", 49, 25, kTextAlignment.center)
+        local InfoX = 150
+
+        gfx.setFont(gfx.font.new('fonts/Kerned Big Run'))
+        gfx.drawTextAligned('Time', InfoX, 54, kTextAlignment.center)
+        gfx.drawTextAligned('Errors', InfoX, 103, kTextAlignment.center)
+        gfx.drawTextAligned('Found', InfoX, 153, kTextAlignment.center)
+
+        gfx.setFont(gfx.font.new('fonts/Kerned Bigger Run'))
+        gfx.drawTextAligned(prettyPrintTime(self.timerValue), InfoX, 69, kTextAlignment.center)
+        gfx.drawTextAligned(self.wrongAttempts, InfoX, 120, kTextAlignment.center)
+        gfx.drawTextAligned(self.discoveredCards .. '/' .. self.howManyCards, InfoX, 169, kTextAlignment.center)
+	gfx.unlockFocus()
+
+    return pauseImage
 end

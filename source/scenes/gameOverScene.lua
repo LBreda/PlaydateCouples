@@ -1,6 +1,7 @@
 import "sceneManager"
 import "scenes/gameScene"
 import "scenes/titleScene"
+import "scenes/creditsScene"
 import "sprites/text"
 
 local pd <const> = playdate
@@ -11,11 +12,36 @@ class("GameOverScene").extends(Room)
 function GameOverScene:enter(previous)
 	self.previous = previous
 
+    ---Plays music
+    self.bgMusic = playBgMusicWithIntro(nil, 'xDeviruchi - Title Theme (Loop)')
+
 	Text('Yay!', 200, 50)
 	Text('You finished the ' .. previous.howManyCards .. '-card game in ' .. prettyPrintTime(previous.timerValue) .. ' minutes', 200, 75)
 	Text('with ' .. previous.wrongAttempts .. ' errors!', 200, 100)
 
 	Text('Press A to retry, B to change difficulty', 200, 200)
+
+    ---Modify system menu
+    local menu = pd.getSystemMenu()
+    menu:removeAllMenuItems()
+    menu:removeAllMenuItems()
+    menu:addMenuItem('Restart game', function ()
+        self.bgMusic:stop()
+        sceneManager:enter(GameScene(), self.previous.howManyCards, self.previous.radius, self.music)
+    end)
+    menu:addMenuItem('Game home', function ()
+        self.bgMusic:stop()
+        sceneManager:enter(TitleScene())
+    end)
+    menu:addMenuItem('Credits', function ()
+        self.bgMusic:stop()
+        sceneManager:enter(CreditsScene())
+    end)
+
+    ---Game pause
+    function pd.gameWillPause()
+        pd.setMenuImage(nil)
+    end
 end
 
 function GameOverScene:update(dt)
@@ -23,9 +49,11 @@ function GameOverScene:update(dt)
 end
 
 function GameOverScene:AButtonDown()
-	sceneManager:enter(GameScene(), self.previous.howManyCards, self.previous.radius)
+    self.bgMusic:stop()
+	sceneManager:enter(GameScene(), self.previous.howManyCards, self.previous.radius, self.previous.music)
 end
 
 function GameOverScene:BButtonDown()
+    self.bgMusic:stop()
 	sceneManager:enter(TitleScene())
 end
