@@ -34,10 +34,24 @@ function Text:changeText(text)
         height = self.font:getHeight() * (select(2, string.gsub(text, "\n", '')) + 1)
     end
 
+    if self.align == 'left' then
+        local finalX = self.selectedX + width/2
+        local finalY = self.selectedY + height / 2
+        local alignment = kTextAlignment.left
+    elseif self.align == 'right' then
+        local finalX = self.selectedX - width / 2
+        local finalY = self.selectedY + height / 2
+        local alignment = kTextAlignment.right
+    else
+        local finalX = self.selectedX
+        local finalY = self.selectedY
+        local alignment = kTextAlignment.center
+    end
+
     -- Writes the image
     local image = gfx.image.new(width, height)
     gfx.lockFocus(image)
-        gfx.drawText(text, 0,0)
+        gfx.drawTextAligned(text, 0, 0, alignment)
 	gfx.unlockFocus()
 	self:setImage(image)
 

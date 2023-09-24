@@ -16,29 +16,34 @@ class("GameScene").extends(Room)
 
 ---Generates the game scene
 ---@param previous table Previous scene
----@param howManyCards integer how many cards to show (defaults to 6)
----@param radius integer (defaults to 80)
-function GameScene:enter(previous, howManyCards, radius, music)
-    ---Available music tracks
-    local musicTracks = {
+---@param level Level
+function GameScene:enter(previous, level)
+    ---Levels settings
+    local levels = {
         {
-            intro = nil,
-            loop = 'xDeviruchi - The Final of The Fantasy',
+            howManyCards = 6,
+            radius = 80,
+            introMusic = nil,
+            loopMusic = 'xDeviruchi - The Final of The Fantasy',
         },
         {
-            intro = 'xDeviruchi - Take some rest and eat some food! (Intro)',
-            loop = 'xDeviruchi - Take some rest and eat some food! (Loop)',
+            howManyCards = 9,
+            radius = 130,
+            introMusic = 'xDeviruchi - Take some rest and eat some food! (Intro)',
+            loopMusic = 'xDeviruchi - Take some rest and eat some food! (Loop)',
         },
         {
-            intro = 'xDeviruchi - And The Journey Begins (Intro)',
-            loop = 'xDeviruchi - And The Journey Begins (Loop)',
+            howManyCards = 12,
+            radius = 160,
+            introMusic = 'xDeviruchi - And The Journey Begins (Intro)',
+            loopMusic = 'xDeviruchi - And The Journey Begins (Loop)',
         },
     }
 
     ---Scene configurations
-    self.howManyCards = howManyCards or 6
-    self.radius = radius or 80
-    self.music = music or (1 + math.floor((2 - #musicTracks) * math.random()))
+    self.level = level
+    self.howManyCards = levels[self.level]['howManyCards']
+    self.radius = levels[self.level]['radius']
 
     ---Game data
     self.centerX = 200 + (self.radius - 80)
@@ -54,7 +59,7 @@ function GameScene:enter(previous, howManyCards, radius, music)
     self.sfxRight = playdate.sound.sampleplayer.new('sounds/sfx/win')
 
     ---Plays music
-    self.bgMusic = playBgMusicWithIntro(musicTracks[self.music]['intro'], musicTracks[self.music]['loop'])
+    self.bgMusic = playBgMusicWithIntro(levels[self.level]['introMusic'], levels[self.level]['loopMusic'])
 
     ---Generates cards list
     local cardList = {}
@@ -91,7 +96,7 @@ function GameScene:enter(previous, howManyCards, radius, music)
     menu:removeAllMenuItems()
     menu:addMenuItem('Restart game', function ()
         self.bgMusic:stop()
-        sceneManager:enter(GameScene(), self.howManyCards, self.radius, self.music)
+        sceneManager:enter(GameScene(), self.level)
     end)
     menu:addMenuItem('Game home', function ()
         self.bgMusic:stop()

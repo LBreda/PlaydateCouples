@@ -57,8 +57,8 @@ function playBgMusicWithIntro(intro, theme, volume)
 end
 
 ---Creates the datastore if it doesn't exist
-if not playdate.datastore.read() then
-    playdate.datastore.write({progressionLevel = 1})
+if not pd.datastore.read() then
+    pd.datastore.write({progressionLevel = 1})
 end
 
 ---Scene manager initialization and configuration

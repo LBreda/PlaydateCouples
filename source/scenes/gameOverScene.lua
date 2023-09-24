@@ -11,6 +11,7 @@ class("GameOverScene").extends(Room)
 
 function GameOverScene:enter(previous)
 	self.previous = previous
+    local progressionLevel = playdate.datastore.read().progressionLevel
 
     ---Plays music
     self.bgMusic = playBgMusicWithIntro(nil, 'xDeviruchi - Title Theme (Loop)')
@@ -21,13 +22,27 @@ function GameOverScene:enter(previous)
 
 	Text('Press A to retry, B to change difficulty', 200, 200)
 
+
+    ---Progression
+    if previous.level == 1 and previous.wrongAttempts <= 4 and progressionLevel == 1 then
+        local store = pd.datastore.read()
+        store.progressionLevel = 2
+        pd.datastore.write(store)
+        Text('You unlocked the next level!', 200, 150)
+    elseif previous.level == 2 and previous.wrongAttempts <= 8 and progressionLevel == 2 then
+        local store = pd.datastore.read()
+        store.progressionLevel = 3
+        pd.datastore.write(store)
+        Text('You unlocked the next level!', 200, 150)
+    end
+
     ---Modify system menu
     local menu = pd.getSystemMenu()
     menu:removeAllMenuItems()
     menu:removeAllMenuItems()
     menu:addMenuItem('Restart game', function ()
         self.bgMusic:stop()
-        sceneManager:enter(GameScene(), self.previous.howManyCards, self.previous.radius, self.music)
+        sceneManager:enter(GameScene(), self.level)
     end)
     menu:addMenuItem('Game home', function ()
         self.bgMusic:stop()
@@ -50,7 +65,7 @@ end
 
 function GameOverScene:AButtonDown()
     self.bgMusic:stop()
-	sceneManager:enter(GameScene(), self.previous.howManyCards, self.previous.radius, self.previous.music)
+	sceneManager:enter(GameScene(), self.previous.level)
 end
 
 function GameOverScene:BButtonDown()
