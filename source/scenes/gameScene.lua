@@ -131,7 +131,6 @@ function GameScene:cranked(change)
     end
 end
 function GameScene:AButtonDown()
-    self.sfxPickup:play()
     self:selectCard()
 end
 function GameScene:BButtonDown()
@@ -156,6 +155,7 @@ function GameScene:selectCard()
     for i = 1, #self.cards, 1 do
         if (not self.cards[i].isFrontFacing) and self.cards[i].angle > (270 - self.step/2) and self.cards[i].angle < (270 + self.step/2) then
             ---Flips the card
+            self.sfxPickup:play()
             self.cards[i]:flip()
             ---Waits for it to be fipped before checking its value
             pd.timer.new(self.cards[i].animationDuration * 2, function ()
