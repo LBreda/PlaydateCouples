@@ -79,6 +79,6 @@ function TitleScene:changeGameMenu(howMuch)
     if self.selectedGameMenuItem == 2 and self.progressionLevel < 2 then
         self.levelForbiddenText = Text('You must complete the easy level\n     with 4 errors or less', 200, 200)
     elseif self.selectedGameMenuItem == 3 and self.progressionLevel < 3 then
-        self.levelForbiddenText = Text('You must complete the hard level\n     with 8 errors or less', 200, 200)
+        self.levelForbiddenText = Text('You must complete the hard level\n     with 10 errors or less', 200, 200)
     end
 end

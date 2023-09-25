@@ -20,7 +20,7 @@ function GameOverScene:enter(previous)
 	Text('You finished the ' .. previous.howManyCards .. '-card game in ' .. prettyPrintTime(previous.timerValue) .. ' minutes', 200, 75)
 	Text('with ' .. previous.wrongAttempts .. ' errors!', 200, 100)
 
-	Text('Press A to retry, B to change difficulty', 200, 200)
+	Text('Press A to retry, B to change level', 200, 200)
 
 
     ---Progression
@@ -29,7 +29,7 @@ function GameOverScene:enter(previous)
         store.progressionLevel = 2
         pd.datastore.write(store)
         Text('You unlocked the next level!', 200, 150)
-    elseif previous.level == 2 and previous.wrongAttempts <= 8 and progressionLevel == 2 then
+    elseif previous.level == 2 and previous.wrongAttempts <= 10 and progressionLevel == 2 then
         local store = pd.datastore.read()
         store.progressionLevel = 3
         pd.datastore.write(store)
