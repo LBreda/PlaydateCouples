@@ -95,10 +95,12 @@ function GameScene:enter(previous, level)
     local menu = pd.getSystemMenu()
     menu:removeAllMenuItems()
     menu:addMenuItem('Restart game', function ()
+        self.isRunning = false
         self.bgMusic:stop()
         sceneManager:enter(GameScene(), self.level)
     end)
     menu:addMenuItem('Game home', function ()
+        self.isRunning = false
         self.bgMusic:stop()
         sceneManager:enter(TitleScene())
     end)
@@ -201,12 +203,14 @@ end
 
 ---Increments the discoveredCards counter
 function GameScene:incrementDiscoveredCards()
-    self.discoveredCards += 1
-    self.discoveredCardsValue:changeText(self.discoveredCards .. '/' .. self.howManyCards)
-    if self.discoveredCards == self.howManyCards then
-        self.isRunning = false
-        self.bgMusic:stop()
-        sceneManager:enter(GameOverScene())
+    if self.isRunning then
+        self.discoveredCards += 1
+        self.discoveredCardsValue:changeText(self.discoveredCards .. '/' .. self.howManyCards)
+        if self.discoveredCards == self.howManyCards then
+            self.isRunning = false
+            self.bgMusic:stop()
+            sceneManager:enter(GameOverScene())
+        end
     end
 end
 
