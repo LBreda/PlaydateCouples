@@ -14,3 +14,7 @@ Find all the couples of cards! You can flip a card by pressing any key and selec
 * [Whitebrim Technologies](https://brim.su/) for their [template/boilerplate](https://github.com/Whitebrim/VSCode-PlaydateTemplate/tree/master)
 * [xDeviruchi](https://xdeviruchi.itch.io/) for their [8 bit Fantasy Adventure Music Pack](https://xdeviruchi.itch.io/8-bit-fantasy-adventure-music-pack)
 * [Kenney](https://kenney.itch.io/) for their [Game Assets](https://kenney.itch.io/kenney-game-assets)
+
+## Special thanks
+
+* thedeadlyslurper on Discord, who found a pretty sneaky bug
