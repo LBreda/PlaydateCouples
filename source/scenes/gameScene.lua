@@ -94,12 +94,12 @@ function GameScene:enter(previous, level)
     ---Modify system menu
     local menu = pd.getSystemMenu()
     menu:removeAllMenuItems()
-    menu:addMenuItem('Restart game', function ()
+    menu:addMenuItem('Restart level', function ()
         self.isRunning = false
         self.bgMusic:stop()
         sceneManager:enter(GameScene(), self.level)
     end)
-    menu:addMenuItem('Game home', function ()
+    menu:addMenuItem('Main menu', function ()
         self.isRunning = false
         self.bgMusic:stop()
         sceneManager:enter(TitleScene())

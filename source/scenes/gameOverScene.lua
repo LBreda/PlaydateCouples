@@ -20,7 +20,7 @@ function GameOverScene:enter(previous)
 	Text('You finished the ' .. previous.howManyCards .. '-card game in ' .. prettyPrintTime(previous.timerValue) .. ' minutes', 200, 75)
 	Text('with ' .. previous.wrongAttempts .. ' errors!', 200, 100)
 
-	Text('Press A to retry, B to change level', 200, 200)
+	Text('Press A to play again, B to go back to the main menu', 200, 200)
 
 
     ---Progression
@@ -40,11 +40,11 @@ function GameOverScene:enter(previous)
     local menu = pd.getSystemMenu()
     menu:removeAllMenuItems()
     menu:removeAllMenuItems()
-    menu:addMenuItem('Restart game', function ()
+    menu:addMenuItem('Restart level', function ()
         self.bgMusic:stop()
         sceneManager:enter(GameScene(), self.previous.level)
     end)
-    menu:addMenuItem('Game home', function ()
+    menu:addMenuItem('Main menu', function ()
         self.bgMusic:stop()
         sceneManager:enter(TitleScene())
     end)
