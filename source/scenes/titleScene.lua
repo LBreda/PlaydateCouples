@@ -12,7 +12,7 @@ class("TitleScene").extends(Room)
 function TitleScene:enter()
     local menuCol = 200
     local menuRow = 130
-    local rowHeight = gfx.font.new('fonts/Big Run'):getHeight() * 1.5
+    local rowHeight = gfx.font.new('fonts/Roobert 11 Medium'):getHeight()
     self.levelForbiddenText = nil
 
     ---Plays music
@@ -25,8 +25,8 @@ function TitleScene:enter()
 
     self.gameMenu = {
         LevelSelectionMenuItem("Easy", menuCol, menuRow, true),
-        LevelSelectionMenuItem("Hard", menuCol, menuRow + rowHeight),
-        LevelSelectionMenuItem("A little bit harder", menuCol, menuRow + rowHeight * 2),
+        LevelSelectionMenuItem("Hard", menuCol, menuRow + rowHeight, false, self.progressionLevel < 2),
+        LevelSelectionMenuItem("A little bit harder", menuCol, menuRow + rowHeight * 2, false, self.progressionLevel < 3),
     }
     self.selectedGameMenuItem = 1
 
@@ -77,8 +77,8 @@ function TitleScene:changeGameMenu(howMuch)
     end
 
     if self.selectedGameMenuItem == 2 and self.progressionLevel < 2 then
-        self.levelForbiddenText = Text('You must complete the easy level\n     with 4 errors or less', 200, 200)
+        self.levelForbiddenText = Text('You must complete the easy level\n     with 4 errors or less\n      to access this level', 200, 210, "center", "Roobert 9 Mono Condensed")
     elseif self.selectedGameMenuItem == 3 and self.progressionLevel < 3 then
-        self.levelForbiddenText = Text('You must complete the hard level\n     with 10 errors or less', 200, 200)
+        self.levelForbiddenText = Text('You must complete the hard level\n     with 10 errors or less\n      to access this level', 200, 210, "center", "Roobert 9 Mono Condensed")
     end
 end
