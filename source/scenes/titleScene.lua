@@ -45,6 +45,7 @@ function TitleScene:enter()
 end
 
 function TitleScene:update()
+    self:changeGameMenu(pd.getCrankTicks(8))
     gfx.sprite.update()
 end
 
