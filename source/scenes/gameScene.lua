@@ -54,9 +54,9 @@ function GameScene:enter(previous, level)
     self.wrongAttempts = 0
     self.discoveredCards = 0
     self.selectedCard = nil
-    self.sfxPickup = playdate.sound.sampleplayer.new('sounds/sfx/pickup3')
-    self.sfxWrong = playdate.sound.sampleplayer.new('sounds/sfx/lose3')
-    self.sfxRight = playdate.sound.sampleplayer.new('sounds/sfx/win')
+    self.sfxPickup = playdate.sound.sampleplayer.new('sounds/sfx/pepSound3')
+    self.sfxWrong = playdate.sound.sampleplayer.new('sounds/sfx/pepSound4')
+    self.sfxRight = playdate.sound.sampleplayer.new('sounds/sfx/pepSound5')
 
     ---Plays music
     self.bgMusic = playBgMusicWithIntro(levels[self.level]['introMusic'], levels[self.level]['loopMusic'])

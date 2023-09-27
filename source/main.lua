@@ -36,10 +36,10 @@ end
 ---Plays a background music with optional intro
 ---@param intro ?string Intro file name (may be nil)
 ---@param theme string Theme file name
----@param volume ?number Volume, defaults to .3
+---@param volume ?number Volume, defaults to .2
 ---@return unknown
 function playBgMusicWithIntro(intro, theme, volume)
-    volume = volume or .3
+    volume = volume or .2
 
     local bgMusic = sound.fileplayer.new('sounds/bgm/' .. theme)
     bgMusic:setVolume(volume)
