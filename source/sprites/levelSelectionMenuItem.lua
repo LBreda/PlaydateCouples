@@ -10,17 +10,19 @@ function LevelSelectionMenuItem:init(text, x, y, isSelected, isLocked)
     self.text = text
     self.isSelected = isSelected or false
     self.isLocked = isLocked or false
+    self.font = 'fonts/Roobert 11 Medium'
 
     -- Writes the image
     self:resetImage()
 
     -- Prints the text
-    self:moveTo(x, y)
+    self:moveTo(x - gfx.font.new(self.font):getHeight()/2, y)
+   
     self:add()
 end
 
 function LevelSelectionMenuItem:resetImage()
-    local currentFont = gfx.font.new('fonts/Roobert 11 Medium')
+    local currentFont = gfx.font.new(self.font)
     gfx.setFont(currentFont)
     local currentFontHeight = currentFont:getHeight()
     local bulletRadius = currentFontHeight * .2

@@ -1,3 +1,4 @@
+import "CoreLibs/timer"
 import "sceneManager"
 import "sprites/levelSelectionMenuItem"
 import "sprites/text"
@@ -11,7 +12,7 @@ class("TitleScene").extends(Room)
 
 function TitleScene:enter()
     local menuCol = 200
-    local menuRow = 130
+    local menuRow = 120
     local rowHeight = gfx.font.new('fonts/Roobert 11 Medium'):getHeight()
     self.levelForbiddenText = nil
 
@@ -21,6 +22,20 @@ function TitleScene:enter()
     ---Gets the progression level
     self.progressionLevel = pd.datastore.read().progressionLevel
 
+    ---Cards circle
+    self.cards = {}
+    for i = 0, 359, 15 do
+        table.insert(self.cards, Card(200, 120, 140, i, ((i/15)%12)+1, true))
+    end
+    local rotateTimer = pd.timer.new(500, function (timer)
+        ---Rotates the cards
+        for i = 1, #self.cards, 1 do
+            self.cards[i]:moveByAngle(1)
+        end
+    end)
+    rotateTimer.repeats = true
+
+    ---Title and menu
     Text("couples", 200, 70, true, 'Carded Bigger Run')
 
     self.gameMenu = {
@@ -45,7 +60,10 @@ function TitleScene:enter()
 end
 
 function TitleScene:update()
+    ---Selects with the crank
     self:changeGameMenu(pd.getCrankTicks(8))
+
+    pd.timer.updateTimers()
     gfx.sprite.update()
 end
 
@@ -78,8 +96,8 @@ function TitleScene:changeGameMenu(howMuch)
     end
 
     if self.selectedGameMenuItem == 2 and self.progressionLevel < 2 then
-        self.levelForbiddenText = Text('You must complete the easy level\n     with 4 errors or less\n      to access this level', 200, 210, "center", "Roobert 9 Mono Condensed")
+        self.levelForbiddenText = Text('You must complete the easy\n level with 4 errors or\n    less to access this\n           level', 200, 205, "center", "Roobert 9 Mono Condensed")
     elseif self.selectedGameMenuItem == 3 and self.progressionLevel < 3 then
-        self.levelForbiddenText = Text('You must complete the hard level\n     with 10 errors or less\n      to access this level', 200, 210, "center", "Roobert 9 Mono Condensed")
+        self.levelForbiddenText = Text('You must complete the hard\n level with 10 errors or\n    less to access this\n          level', 200, 205, "center", "Roobert 9 Mono Condensed")
     end
 end
