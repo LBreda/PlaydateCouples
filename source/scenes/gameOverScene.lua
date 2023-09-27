@@ -16,25 +16,35 @@ function GameOverScene:enter(previous)
     ---Plays music
     self.bgMusic = playBgMusicWithIntro(nil, 'xDeviruchi - Title Theme (Loop)')
 
-	Text('Yay!', 200, 50)
-	Text('You finished the ' .. previous.howManyCards .. '-card game in ' .. prettyPrintTime(previous.timerValue) .. ' minutes', 200, 75)
-	Text('with ' .. previous.wrongAttempts .. ' errors!', 200, 100)
-
-	Text('Press A to play again, B to go back to the main menu', 200, 200)
-
+    ---Background
+    Image(200, 120, gfx.image.new('images/gameOverSceneBackground'), true)
 
     ---Progression
+    local progressionHappened = false
     if previous.level == 1 and previous.wrongAttempts <= 4 and progressionLevel == 1 then
         local store = pd.datastore.read()
         store.progressionLevel = 2
+        progressionHappened = true
         pd.datastore.write(store)
-        Text('You unlocked the next level!', 200, 150)
+        Text('You unlocked the next level!', 200, 150, 'center', 'Roobert 11 Medium')
     elseif previous.level == 2 and previous.wrongAttempts <= 10 and progressionLevel == 2 then
         local store = pd.datastore.read()
         store.progressionLevel = 3
+        progressionHappened = true
         pd.datastore.write(store)
-        Text('You unlocked the next level!', 200, 150)
+        Text('You unlocked the next level!', 200, 150, 'center', 'Roobert 11 Medium')
     end
+
+    ---Main text
+    local yOffset = 0;
+    if not progressionHappened then
+        yOffset = 30
+    end
+	Text('Yay!', 200, 50 + yOffset, 'center', 'Roobert 11 Medium')
+	Text('You finished the ' .. previous.howManyCards .. '-card game', 200, 75 + yOffset, 'center', 'Roobert 11 Medium')
+	Text('in ' .. prettyPrintTime(previous.timerValue) .. ' minutes with ' .. previous.wrongAttempts .. ' errors!', 200, 100 + yOffset, 'center', 'Roobert 11 Medium')
+
+	Text('Ⓐ to play again, Ⓑ for the main menu', 200, 200, 'center', 'Roobert 11 Medium')
 
     ---Modify system menu
     local menu = pd.getSystemMenu()
