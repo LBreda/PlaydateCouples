@@ -12,8 +12,9 @@ class('Card').extends(gfx.sprite)
 ---@param angle integer Rotation angle (degrees)
 ---@param cardNo integer Card number
 ---@param frontFacing ?boolean Wether or not the card is front facing (defaults to false)
----@param rotateImage ?boolean Wether or not to rotate the image along the radius (defaults to false)
-function Card:init(centerX, centerY, radius, angle, cardNo, frontFacing, rotateImage)
+---@param rotationAngle ?integer Image rotation angle
+---@param isBig ?boolean Wether the card is the big version or not
+function Card:init(centerX, centerY, radius, angle, cardNo, frontFacing, rotationAngle, isBig)
     ---Params defaults
     self.angle = ((angle or 0) % 360)
     self.angleRad = math.rad(self.angle)
@@ -21,13 +22,20 @@ function Card:init(centerX, centerY, radius, angle, cardNo, frontFacing, rotateI
     self.centerY = centerY
     self.radius = radius
     self.cardNo = cardNo
-    self.rotateImage = rotateImage or false
+    self.rotationAngle = rotationAngle or 0
+    self.rotationAngleRad = math.rad(self.rotationAngle)
     self.frontFacing = frontFacing or false
+    self.isBig = isBig or false
 
     ---Class data
-    self.cardImageTable = gfx.imagetable.new('images/card')
+    if not isBig then
+        self.cardImageTable = gfx.imagetable.new('images/card')
+    else
+        self.cardImageTable = gfx.imagetable.new('images/card-medium')
+    end
     self.noOfCardStates, self.noOfCards = self.cardImageTable:getSize()
     self.flippingAnimator = nil
+    self.rollingAnimator = nil
     self.animationDuration = 500
 
     if self.frontFacing then
@@ -49,6 +57,14 @@ function Card:update()
     elseif self.flippingAnimator and self.flippingAnimator:ended() then
         self.flippingAnimator = nil
     end
+
+    ---If the RollingAnimator is set, rolls the card (or removes it if ended)
+    if self.rollingAnimator and not self.rollingAnimator:ended() then
+        print(math.floor(self.rollingAnimator:currentValue()))
+        self.rotationAngle = math.floor(self.rollingAnimator:currentValue())
+        self.rotationAngleRad = math.rad(self.rotationAngle)
+        self:draw()
+    end
 end
 
 ---Draws the card
@@ -61,16 +77,16 @@ function Card:draw()
     local cardImage = self.cardImageTable:getImage(self.currentState, self.cardNo)
 
     ---If the image will be rotated, calculates the canvas width and height, and draws it in the canvas
-    if self.rotateImage then
-        local width = math.abs(cardImage.width * math.cos(self.angleRad)) + math.abs(cardImage.height * math.sin(self.angleRad))
-        local height = math.abs(cardImage.width * math.sin(self.angleRad)) + math.abs(cardImage.height * math.cos(self.angleRad))
+    if self.rotationAngle ~= 0 then
+        local width = math.abs(cardImage.width * math.cos(self.rotationAngleRad)) + math.abs(cardImage.height * math.sin(self.rotationAngleRad))
+        local height = math.abs(cardImage.width * math.sin(self.rotationAngleRad)) + math.abs(cardImage.height * math.cos(self.rotationAngleRad))
 
         ---Creates canvas image
         local image = gfx.image.new(width, height)
 
         ---Draws the image
         gfx.lockFocus(image)
-            cardImage:drawRotated(0 + width/2, 0 + height/2, self.angle)
+            cardImage:drawRotated(0 + width/2, 0 + height/2, self.rotationAngle)
         gfx.unlockFocus()
 
         self:setImage(image)
@@ -107,4 +123,9 @@ function Card:flip()
     end
 
     self.isFrontFacing = not self.isFrontFacing
+end
+
+---Rolls the card
+function Card:roll()
+    self.rollingAnimator = gfx.animator.new(self.animationDuration, 0, 360)
 end

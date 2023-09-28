@@ -24,17 +24,20 @@ function GameScene:enter(previous, level)
             howManyCards = 6,
             radius = 80,
             introMusic = nil,
+            selectedCardDisplayX = 200,
             loopMusic = 'xDeviruchi - The Final of The Fantasy',
         },
         {
             howManyCards = 9,
             radius = 130,
+            selectedCardDisplayX = 200,
             introMusic = 'xDeviruchi - Take some rest and eat some food! (Intro)',
             loopMusic = 'xDeviruchi - Take some rest and eat some food! (Loop)',
         },
         {
             howManyCards = 12,
             radius = 160,
+            selectedCardDisplayX = 200,
             introMusic = 'xDeviruchi - And The Journey Begins (Intro)',
             loopMusic = 'xDeviruchi - And The Journey Begins (Loop)',
         },
@@ -48,12 +51,14 @@ function GameScene:enter(previous, level)
     ---Game data
     self.centerX = 200 + (self.radius - 80)
     self.centerY = 120
+    self.selectedCardDisplayX = levels[self.level]['selectedCardDisplayX']
     self.step = 360/(self.howManyCards * 2)
     self.isRunning = true
     self.timerValue = 0
     self.wrongAttempts = 0
     self.discoveredCards = 0
     self.selectedCard = nil
+    self.selectedCardSprite = nil
     self.sfxPickup = playdate.sound.sampleplayer.new('sounds/sfx/pepSound3')
     self.sfxWrong = playdate.sound.sampleplayer.new('sounds/sfx/pepSound4')
     self.sfxRight = playdate.sound.sampleplayer.new('sounds/sfx/pepSound5')
@@ -160,29 +165,50 @@ function GameScene:selectCard()
             self.sfxPickup:play()
             self.cards[i]:flip()
             ---Waits for it to be fipped before checking its value
-            pd.timer.new(self.cards[i].animationDuration * 2, function ()
+            pd.timer.new(self.cards[i].animationDuration, function ()
                 ---If a card is already selected
                 if self.selectedCard then
-                    ---and it contains the same figure
-                    if self.selectedCard.cardNo == self.cards[i].cardNo then
-                        ---Increments the discoveredCards
-                        self.sfxRight:play()
-                        self:incrementDiscoveredCards()
-                    ---and it does not contain the same figure
-                    else
-                        ---Flips the cards back again
-                        self.sfxWrong:play()
-                        self.selectedCard:flip()
-                        self.cards[i]:flip()
-                        ---Increments the wrongAttempts
-                        self:incrementWrongAttempts()
-                    end
-                    ---Unselects the selected card
-                    self.selectedCard = nil
+                    ---Waits a little and
+                    pd.timer.new(self.cards[i].animationDuration, function ()
+                        ---and it contains the same figure
+                        if self.selectedCard.cardNo == self.cards[i].cardNo then
+                            self.sfxRight:play()
+
+                            ---Increments the discoveredCards
+                            self:incrementDiscoveredCards()
+
+                            ---Rolls the selected card display
+                            self.selectedCardSprite:roll()
+
+                            ---Removes the selected card display after the animation
+                            pd.timer.new(self.cards[i].animationDuration, function ()
+                                self.selectedCardSprite:remove()
+                                self.selectedCardSprite = nil
+                            end)
+                        ---and it does not contain the same figure
+                        else
+                            self.sfxWrong:play()
+
+                            ---Flips the cards back again
+                            self.selectedCard:flip()
+                            self.cards[i]:flip()
+
+                            ---Increments the wrongAttempts
+                            self:incrementWrongAttempts()
+
+                            --Removes the selected card display
+                            self.selectedCardSprite:remove()
+                            self.selectedCardSprite = nil
+                        end
+
+                        ---Unselects the selected card
+                        self.selectedCard = nil
+                    end)
                 ---If there is no selected card
                 else
                     ---selects the current one
                     self.selectedCard = self.cards[i]
+                    self.selectedCardSprite = Card(self.selectedCardDisplayX, self.centerY, 0, 0, self.cards[i].cardNo, true, false, true)
                 end
             end)
         end
