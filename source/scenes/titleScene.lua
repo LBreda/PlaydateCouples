@@ -86,18 +86,20 @@ function TitleScene:AButtonDown()
 end
 
 function TitleScene:changeGameMenu(howMuch)
-    self.selectedGameMenuItem = (self.selectedGameMenuItem + howMuch - 1) % #self.gameMenu + 1
-    for i = 1, #self.gameMenu, 1 do
-        self.gameMenu[i]:setSelection(i == self.selectedGameMenuItem)
-    end
+    if howMuch ~= 0 then
+        self.selectedGameMenuItem = (self.selectedGameMenuItem + howMuch - 1) % #self.gameMenu + 1
+        for i = 1, #self.gameMenu, 1 do
+            self.gameMenu[i]:setSelection(i == self.selectedGameMenuItem)
+        end
     
-    if self.levelForbiddenText then
-        self.levelForbiddenText:remove()
-    end
+        if self.levelForbiddenText then
+            self.levelForbiddenText:remove()
+        end
 
-    if self.selectedGameMenuItem == 2 and self.progressionLevel < 2 then
-        self.levelForbiddenText = Text('You must complete the easy\n level with 4 errors or\n    less to access this\n           level', 200, 205, "center", "Roobert 9 Mono Condensed")
-    elseif self.selectedGameMenuItem == 3 and self.progressionLevel < 3 then
-        self.levelForbiddenText = Text('You must complete the hard\n level with 10 errors or\n    less to access this\n          level', 200, 205, "center", "Roobert 9 Mono Condensed")
+        if self.selectedGameMenuItem == 2 and self.progressionLevel < 2 then
+            self.levelForbiddenText = Text('You must complete the easy\n level with 4 errors or\n    less to access this\n           level', 200, 205, "center", "Roobert 9 Mono Condensed")
+        elseif self.selectedGameMenuItem == 3 and self.progressionLevel < 3 then
+            self.levelForbiddenText = Text('You must complete the hard\n level with 10 errors or\n    less to access this\n          level', 200, 205, "center", "Roobert 9 Mono Condensed")
+        end
     end
 end
