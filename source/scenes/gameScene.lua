@@ -85,7 +85,7 @@ function GameScene:enter(previous, level)
 
     ---Game info screen
     local InfoX = 351
-    Text("c\no\nu\np\nl\ne\ns", 51, 121, 'center', 'Carded Bigger Run')
+    Text("c\no\nu\np\nl\ne\ns", 51, 121, 'center', 'Carded Bigger Run Bordered')
     self.elapsedTimeKey = Text('Time', InfoX, 58, 'center')
     self.elapsedTimeValue = Text('0:00', InfoX, 78, 'center', 'Kerned Bigger Run')
     self.wrongAttemptsKey = Text('Errors', InfoX, 108, 'center')
