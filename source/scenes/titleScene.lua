@@ -81,7 +81,7 @@ function TitleScene:AButtonDown()
         self.bgMusic:stop()
         sceneManager:enter(GameScene(), self.selectedGameMenuItem)
     else
-        playdate.sound.sampleplayer.new('sounds/sfx/lose3'):play()
+        playdate.sound.sampleplayer.new('sounds/sfx/pepSound4'):play()
     end
 end
 

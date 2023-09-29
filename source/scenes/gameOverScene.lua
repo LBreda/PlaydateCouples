@@ -44,7 +44,8 @@ function GameOverScene:enter(previous)
 	Text('You finished the ' .. previous.howManyCards .. '-card game', 200, 75 + yOffset, 'center', 'Roobert 11 Medium')
 	Text('in ' .. prettyPrintTime(previous.timerValue) .. ' minutes with ' .. previous.wrongAttempts .. ' errors!', 200, 100 + yOffset, 'center', 'Roobert 11 Medium')
 
-	Text('Ⓐ to play again, Ⓑ for the main menu', 200, 200, 'center', 'Roobert 11 Medium')
+	Text('Ⓐ to play again', 200, 190, 'center', 'Roobert 11 Medium')
+	Text('Ⓑ for the main menu', 200, 210, 'center', 'Roobert 11 Medium')
 
     ---Modify system menu
     local menu = pd.getSystemMenu()

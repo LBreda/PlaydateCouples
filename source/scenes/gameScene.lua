@@ -21,7 +21,7 @@ function GameScene:enter(previous, level)
     ---Levels settings
     local levels = {
         {
-            howManyCards = 6,
+            howManyCards = 1,
             radius = 80,
             introMusic = nil,
             selectedCardDisplayX = 200,
@@ -178,7 +178,9 @@ function GameScene:selectCard()
                             self:incrementDiscoveredCards()
 
                             ---Rolls the selected card display
-                            self.selectedCardSprite:roll()
+                            if self.selectedCardSprite then
+                                self.selectedCardSprite:roll()
+                            end
 
                             ---Removes the selected card display after the animation
                             pd.timer.new(self.cards[i].animationDuration, function ()
