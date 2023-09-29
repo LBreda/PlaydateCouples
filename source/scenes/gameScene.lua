@@ -21,7 +21,7 @@ function GameScene:enter(previous, level)
     ---Levels settings
     local levels = {
         {
-            howManyCards = 1,
+            howManyCards = 6,
             radius = 80,
             introMusic = nil,
             selectedCardDisplayX = 200,
