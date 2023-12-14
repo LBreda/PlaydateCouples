@@ -184,7 +184,7 @@ function GameScene:selectCard()
 
                             ---Removes the selected card display after the animation
                             pd.timer.new(self.cards[i].animationDuration, function ()
-                                if not self.selectedCard or self.selectedCard.cardNo == self.selectedCardSprite.cardNo then
+                                if (not self.selectedCard or self.selectedCard.cardNo == self.selectedCardSprite.cardNo) and self.selectedCardSprite ~= nil then
                                     self.selectedCardSprite:remove()
                                     self.selectedCardSprite = nil
                                 end
